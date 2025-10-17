@@ -60,7 +60,7 @@ namespace RoyalSetsIceTask.Controllers
         {
             var list = new List<FamilyNode>();
             Root.FillPreOrder(list);
-            return View(list);
+            return View(Root);
         }
 
         [HttpGet]
@@ -69,15 +69,26 @@ namespace RoyalSetsIceTask.Controllers
             if (string.IsNullOrWhiteSpace(name))
                 return RedirectToAction("Index");
 
-            // Use the enhanced search from FamilyNode
+            // Perform search
             var found = Root.SearchMember(name, method);
 
+            // Build pre-order list for the succession
+            var successionList = new List<FamilyNode>();
+            Root.FillPreOrder(successionList);
+
+            // Find position (1-based)
+            int position = -1;
+            if (found != null)
+                position = successionList.FindIndex(n => n.Member.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) + 1;
+
+            // Pass data to view
             ViewBag.SearchResult = found;
+            ViewBag.SearchPosition = position;
             ViewBag.SearchQuery = name;
 
-            // Return to the same page, with highlighted node in the tree
             return View("Index", Root);
         }
+
 
         [HttpPost]
         public IActionResult AddChild(string parentName, string name, DateTime dateOfBirth, bool isAlive)

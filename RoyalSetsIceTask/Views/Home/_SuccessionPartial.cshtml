@@ -1,0 +1,17 @@
+﻿@model RoyalSetsIceTask.Models.FamilyNode
+
+<li class="member-card">
+    <strong>@Model.Member.Name</strong><br />
+    Born: @Model.Member.DateOfBirth.ToString("yyyy-MM-dd")<br />
+    Status: @(Model.Member.IsAlive ? "Alive" : "Deceased")
+
+    @if (Model.Children.Any())
+    {
+        <ul class="tree-list">
+            @foreach (var child in Model.Children)
+            {
+                @Html.Partial("_SuccessionPartial", child)
+            }
+        </ul>
+    }
+</li>

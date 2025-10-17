@@ -5,9 +5,10 @@
 }
 
 <div class="container">
-    <h1>House of Windsor - Family Tree</h1>
+    <h1> House of Windsor - Family Tree</h1>
     <p class="text-center">Total members: <b>@ViewBag.TotalCount</b></p>
 
+    <!-- Messages -->
     @if (TempData["Message"] != null)
     {
         <div class="alert alert-info">@TempData["Message"]</div>
@@ -17,6 +18,10 @@
     {
         <div class="alert alert-success">
             Found: <b>@ViewBag.SearchResult.Member.Name</b>
+            @if (ViewBag.SearchPosition != null)
+            {
+                Number: {<b>@ViewBag.SearchPosition</b>}                    
+            }
         </div>
     }
 
@@ -31,6 +36,7 @@
 
         <!-- Search & Add Section -->
         <section class="card form-section">
+            <!-- Search -->
             <h2>Search Member</h2>
             <form method="get" asp-action="Search" class="search-form">
                 <input class="form-control" type="text" name="name" placeholder="Enter name..." required />
@@ -43,6 +49,7 @@
 
             <hr />
 
+            <!-- Add Child -->
             <h2>Add Child</h2>
             <form method="post" asp-action="AddChild" class="add-form">
                 <label>Parent Name</label>
@@ -62,6 +69,7 @@
                 <button class="btn" type="submit">Add Child</button>
             </form>
 
+            <!-- Link to Succession -->
             <div class="link-section">
                 <a class="btn" asp-action="Succession">View Line of Succession</a>
             </div>

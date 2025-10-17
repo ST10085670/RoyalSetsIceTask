@@ -1,0 +1,30 @@
+﻿@model List<RoyalSetsIceTask.Models.RoyalMember>
+
+@{
+    ViewData["Title"] = "Line of Succession";
+}
+
+<div class="container">
+    <h1>👑 Line of Succession</h1>
+    <p class="text-center">Total members in succession: <b>@Model.Count</b></p>
+
+    <div class="tree">
+        <ul class="tree-list">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var member = Model[i];
+                <li class="member-card">
+                    <strong>@(i + 1). @member.Name</strong>
+                    <br />
+                    Born: @member.DateOfBirth.ToString("yyyy-MM-dd")
+                    <br />
+                    Status: @(member.IsAlive ? "Alive" : "Deceased")
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="link-section">
+        <a class="btn" asp-action="Index">← Back to Family Tree</a>
+    </div>
+</div>

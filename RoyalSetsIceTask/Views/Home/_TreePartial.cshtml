@@ -1,20 +1,17 @@
 ﻿@model RoyalSetsIceTask.Models.FamilyNode
 
-<ul class="tree-list">
-    <li>
-        <div class="member-card">
-            <strong>@Model.Member.Name</strong>
-            <small>@Model.Member.DateOfBirth.ToString("yyyy-MM-dd")</small>
-        </div>
+<li class="member-card @(Model.IsHighlighted ? "highlighted" : "")">
+    <strong>@Model.Member.Name</strong><br />
+    Born: @Model.Member.DateOfBirth.ToString("yyyy-MM-dd")<br />
+    Status: @(Model.Member.IsAlive ? "Alive" : "Deceased")
 
-        @if (Model.Children.Any())
-        {
-            <ul>
-                @foreach (var child in Model.Children)
-                {
-                    @Html.Partial("_TreePartial", child)
-                }
-            </ul>
-        }
-    </li>
-</ul>
+    @if (Model.Children.Any())
+    {
+        <ul class="tree-list">
+            @foreach (var child in Model.Children)
+            {
+                @Html.Partial("_TreePartial", child)
+            }
+        </ul>
+    }
+</li>

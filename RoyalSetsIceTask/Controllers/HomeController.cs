@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using RoyalSetsIceTask.Models;
 using System.Collections.Generic;
@@ -70,85 +69,32 @@ namespace RoyalSetsIceTask.Controllers
             if (string.IsNullOrWhiteSpace(name))
                 return RedirectToAction("Index");
 
-            FamilyNode found;
-            List<string> traversal;
+            // Use the enhanced search from FamilyNode
+            var found = Root.SearchMember(name, method);
 
-            if (method == "DFS")
-            {
-                var result = DFSSearch(Root, name);
-                found = result.found;
-                traversal = result.traversal;
-            }
-            else
-            {
-                found = BFSSearch(Root, name, out traversal);
-            }
+            ViewBag.SearchResult = found;
+            ViewBag.SearchQuery = name;
 
-            ViewBag.Traversal = traversal;
-            ViewBag.Method = method;
-            ViewBag.SearchName = name;
-
-            return View("SearchResult", found);
+            // Return to the same page, with highlighted node in the tree
+            return View("Index", Root);
         }
 
         [HttpPost]
-        public IActionResult AddChild(string parentName, RoyalMember child)
+        public IActionResult AddChild(string parentName, string name, DateTime dateOfBirth, bool isAlive)
         {
-            var (found, traversal) = DFSSearch(Root, parentName);
-            if (found == null)
+            var child = new RoyalMember(name, dateOfBirth, isAlive);
+            var parent = Root.SearchMember(parentName, "BFS");
+
+            if (parent == null)
             {
-                ViewBag.Message = $"Parent '{parentName}' not found.";
-                return View("SearchResult", null);
+                TempData["Message"] = $"Parent '{parentName}' not found.";
+                return RedirectToAction("Index");
             }
 
-            found.AddChild(child);
-            ViewBag.Message = $"{child.Name} successfully added under {found.Member.Name}.";
-            ViewBag.Traversal = traversal;
+            parent.AddChild(child);
+            TempData["Message"] = $"{child.Name} successfully added under {parent.Member.Name}.";
 
             return RedirectToAction("Index");
-        }
-
-        // ----- BFS -----
-        private static FamilyNode BFSSearch(FamilyNode root, string name, out List<string> traversal)
-        {
-            traversal = new();
-            var q = new Queue<FamilyNode>();
-            q.Enqueue(root);
-
-            while (q.Count > 0)
-            {
-                var node = q.Dequeue();
-                traversal.Add(node.Member.Name);
-                if (node.Member.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                    return node;
-
-                foreach (var child in node.Children)
-                    q.Enqueue(child);
-            }
-            return null;
-        }
-
-        // ----- DFS -----
-        private static (FamilyNode found, List<string> traversal) DFSSearch(FamilyNode root, string name)
-        {
-            List<string> traversal = new();
-            FamilyNode found = null;
-
-            void dfs(FamilyNode n)
-            {
-                if (n == null || found != null) return;
-                traversal.Add(n.Member.Name);
-                if (n.Member.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                {
-                    found = n;
-                    return;
-                }
-                foreach (var c in n.Children)
-                    dfs(c);
-            }
-
-            dfs(root);
-            return (found, traversal);
         }
     }
 }

@@ -5,8 +5,20 @@
 }
 
 <div class="container">
-    <h1>👑 House of Windsor</h1>
+    <h1>House of Windsor - Family Tree</h1>
     <p class="text-center">Total members: <b>@ViewBag.TotalCount</b></p>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-info">@TempData["Message"]</div>
+    }
+
+    @if (ViewBag.SearchResult != null)
+    {
+        <div class="alert alert-success">
+            Found: <b>@ViewBag.SearchResult.Member.Name</b>
+        </div>
+    }
 
     <div class="content-flex">
         <!-- Family Tree Section -->
@@ -37,13 +49,13 @@
                 <input class="form-control" type="text" name="parentName" required />
 
                 <label>Child Name</label>
-                <input class="form-control" type="text" name="Name" required />
+                <input class="form-control" type="text" name="name" required />
 
                 <label>Date of Birth</label>
-                <input class="form-control" type="date" name="DateOfBirth" required />
+                <input class="form-control" type="date" name="dateOfBirth" required />
 
                 <label class="checkbox-label">
-                    <input type="checkbox" name="IsAlive" checked />
+                    <input type="checkbox" name="isAlive" checked />
                     Alive
                 </label>
 

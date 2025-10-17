@@ -1,0 +1,58 @@
+﻿@model RoyalSetsIceTask.Models.FamilyNode
+
+@{
+    ViewData["Title"] = "House of Windsor";
+}
+
+<div class="container">
+    <h1>👑 House of Windsor</h1>
+    <p class="text-center">Total members: <b>@ViewBag.TotalCount</b></p>
+
+    <div class="content-flex">
+        <!-- Family Tree Section -->
+        <section class="card tree-section">
+            <h2>Family Tree</h2>
+            <div class="tree">
+                @Html.Partial("_TreePartial", Model)
+            </div>
+        </section>
+
+        <!-- Search & Add Section -->
+        <section class="card form-section">
+            <h2>Search Member</h2>
+            <form method="get" asp-action="Search" class="search-form">
+                <input class="form-control" type="text" name="name" placeholder="Enter name..." required />
+                <select class="form-control" name="method">
+                    <option value="BFS">BFS</option>
+                    <option value="DFS">DFS</option>
+                </select>
+                <button class="btn" type="submit">Search</button>
+            </form>
+
+            <hr />
+
+            <h2>Add Child</h2>
+            <form method="post" asp-action="AddChild" class="add-form">
+                <label>Parent Name</label>
+                <input class="form-control" type="text" name="parentName" required />
+
+                <label>Child Name</label>
+                <input class="form-control" type="text" name="Name" required />
+
+                <label>Date of Birth</label>
+                <input class="form-control" type="date" name="DateOfBirth" required />
+
+                <label class="checkbox-label">
+                    <input type="checkbox" name="IsAlive" checked />
+                    Alive
+                </label>
+
+                <button class="btn" type="submit">Add Child</button>
+            </form>
+
+            <div class="link-section">
+                <a class="btn" asp-action="Succession">View Line of Succession</a>
+            </div>
+        </section>
+    </div>
+</div>

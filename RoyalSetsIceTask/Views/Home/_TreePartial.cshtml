@@ -1,0 +1,20 @@
+﻿@model RoyalSetsIceTask.Models.FamilyNode
+
+<ul class="tree-list">
+    <li>
+        <div class="member-card">
+            <strong>@Model.Member.Name</strong>
+            <small>@Model.Member.DateOfBirth.ToString("yyyy-MM-dd")</small>
+        </div>
+
+        @if (Model.Children.Any())
+        {
+            <ul>
+                @foreach (var child in Model.Children)
+                {
+                    @Html.Partial("_TreePartial", child)
+                }
+            </ul>
+        }
+    </li>
+</ul>
